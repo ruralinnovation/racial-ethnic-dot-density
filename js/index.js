@@ -1,223 +1,124 @@
-// d3.graphScroll()
-//     .sections(d3.selectAll('#sections > div'))
-//     .on('active', function(i){ console.log(i + 'th section active') })
-
 
 let map_width = 950;
 let map_height = 500
 let margin = ({ top: 0, right: 0, bottom: 0, left: 0 });
 
-let show_metro_fringe = true;
-let show_open_lands = true;
-let show_small_towns = true;
-
 let dot_opacity = .7;
 
-function update_metro_fringe_checkbox() {
-  if (d3.select("#metro-fringe").property("checked")) {
-    d3.selectAll(".metro-fringe-dots")
-      .transition()
-      .duration(0)
-      .style("opacity", dot_opacity);
-  } else {
-    d3.selectAll(".metro-fringe-dots").style("opacity", 0);
-  }
+let race_filters = [
+  "pop_asian_combo",
+  "pop_american_indian_combo",
+  "pop_black_combo",
+  "pop_hispanic_combo",
+  "pop_native_hawaiian_pacific_islander_combo",
+  "pop_white_combo"
+];
+
+function hex_to_rgb_array(c) {
+  let rgb = d3.color(c);
+  return [rgb.r, rgb.g, rgb.b];
 }
 
-function update_open_lands_checkbox() {
-  if (d3.select("#open-lands").property("checked")) {
-    d3.selectAll(".open-lands-dots")
-      .transition()
-      .duration(0)
-      .style("opacity", dot_opacity);
-  } else {
-    d3.selectAll(".open-lands-dots").style("opacity", 0);
-  }
-}
+let race_color = {
+  pop_white_combo: hex_to_rgb_array("#E74F2A"),
+  pop_black_combo: hex_to_rgb_array("#00835D"),
+  pop_american_indian_combo: hex_to_rgb_array("#234FBF"),
+  pop_hispanic_combo: hex_to_rgb_array("#BB3534"),
+  pop_asian_combo: hex_to_rgb_array("#3BA0BF"),
+  pop_native_hawaiian_pacific_islander_combo: hex_to_rgb_array("#7658A2")
+};
 
-function update_small_towns_checkbox() {
-  if (d3.select("#small-towns").property("checked")) {
-    d3.selectAll(".small-towns-dots")
-      .transition()
-      .duration(0)
-      .style("opacity", dot_opacity);
-  } else {
-    d3.selectAll(".small-towns-dots").style("opacity", 0);
-  }
-}
 
-function update_metro_counties_checkbox() {
-  if (d3.select("#metro-counties").property("checked")) {
-    d3.selectAll(".counties")
-      .transition()
-      .duration(0)
-      .style("opacity", 1);
-  } else {
-    d3.selectAll(".counties").style("opacity", 0);
-  }
-}
+function update_asian_checkbox() {
+  if (d3.select("#asian").property("checked")) {
+    race_filters.push('pop_asian_combo');
+    const layer = new deck.ScatterplotLayer({
+      data: map_dta.filter(d => race_filters.includes(d.variable)),
+      getPosition: (d) => [+d.lon, +d.lat],
+      getColor: (d) => race_color[d.variable],
+      getRadius: 300,
+      opacity: 0.7
+    })
+    deck.setProps([layer]);
 
-function update_native_lands_checkbox() {
-  if (d3.select("#native-lands").property("checked")) {
-    d3.selectAll(".native_lands")
-      .transition()
-      .duration(0)
-      .style("opacity", .8);
   } else {
-    d3.selectAll(".native_lands").style("opacity", 0);
+    const index = race_filters.indexOf('pop_asian_combo');
+    if (index > -1) { // only splice array when item is found
+      race_filters.splice(index, 1); // 2nd parameter means remove one item only
+      const layer = new deck.ScatterplotLayer({
+        data: map_dta.filter(d => race_filters.includes(d.variable)),
+        getPosition: (d) => [+d.lon, +d.lat],
+        getColor: (d) => race_color[d.variable],
+        getRadius: 300,
+        opacity: 0.7
+      })
+      deck.setProps([layer]);
+    }
   }
 }
 
 function render() {
 
-  let projection = d3
-    .geoAlbersUsa()
-    .scale((map_width - margin.left - margin.right) * 1.1)
-    .translate([
-      (map_width - margin.left - margin.right) / 2,
-      (map_height + margin.top + margin.bottom) / 2
-    ]);
+    Promise.all([
+      d3.csv("data/dots_100p_all_rural_2020.csv")
+    ]).then(function(files) {
 
-    let path = d3.geoPath().projection(projection);
-
-  Promise.all([
-    d3.csv("data/tot_pop_dots_simplified.csv"),
-    d3.json("data/counties-10m-simplified-10-metro.json"),
-    d3.json("data/tl_2019_us_aiannh_simplified_2.0.json"),
-  ]).then(function(files) {
-      
-    let counties = topojson.feature(files[1], files[1].objects.counties).features;
-    let states = topojson.feature(files[1], files[1].objects.states).features;
-
-    let metro_fringe = files[0].filter(function(d) { return +d.variable == 1; });
-    let open_lands = files[0].filter(function(d) { return +d.variable == 2; });
-    let small_towns = files[0].filter(function(d) { return +d.variable == 3; });
-
-    let native_lands = topojson.feature(files[2], files[2].objects.tl_2019_us_aiannh).features;
-
-    let svg = d3
-      .select("#container")
-      .attr("class", "svg-container")
-      .append("svg")
-      .attr("class", "svg-content")
-      .attr("viewBox", [0, 0, map_width + margin.left + margin.right, map_height + margin.bottom + margin.top])
-          .attr("preserveAspectRatio", "xMidYMid meet")
-          .append("g")
-            .attr("transform", 
-                  "translate(" + margin.left + "," + margin.top + ")");
-
-    const g = svg.append("g");
-
-    g.selectAll(".counties")
-      .data(counties)
-      .enter()
-      .append("path")
-      .attr("class", "counties")
-      .attr("d", path)
-      .attr("fill", "#d0d2ce")
-      .attr("stroke-width", "0px")
-      .attr("stroke", function (d) {
-        return "white";
+      const deckgl = new deck.DeckGL({
+        container: 'container',
+        map: mapboxgl,
+        mapStyle: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
+        initialViewState: {
+          longitude: -96,
+          latitude: 38,
+          zoom: 3.7,
+          pitch: 0,
+          bearing: 0
+        },
+        controller: true,
+        layers: []
       });
 
-    g.selectAll(".native_lands")
-      .data(native_lands)
-      .enter()
-      .append("path")
-      .attr("class", "native_lands")
-      .attr("d", path)
-      .attr("fill", "#FEECBB")
-      .attr("stroke-width", "0px")
-      .attr("stroke", function (d) {
-        return "white";
-      })
-      .style("opacity", .8);
+      console.log(deckgl);
 
-    g.selectAll(".states")
-      .data(states)
-      .enter()
-      .append("path")
-      .attr("class", "states")
-      .attr("d", path)
-      .attr("fill", "none")
-      .attr("stroke", "#8e8e8e")
-      .attr("stroke-width", "1px")
-      .attr("stroke-opacity", 1);
+      const new_layer = new deck.ScatterplotLayer({
+        data: files[0].filter(d => race_filters.includes(d.variable)),
+        getPosition: (d) => [+d.lon, +d.lat],
+        getColor: (d) => race_color[d.variable],
+        getRadius: 300,
+        opacity: 0.7
+      })
 
-    g.selectAll(".dots")
-      .data(metro_fringe)
-      .enter()
-      .append("circle")
-      .attr("class", "metro-fringe-dots")
-      .attr("cx", function (d) {
-        if (projection([+d["lon"], +d["lat"]]) == null) {
-          return;
-        }
-        return projection([+d["lon"], +d["lat"]])[0];
-      })
-      .attr("cy", function (d) {
-        if (projection([+d["lon"], +d["lat"]]) == null) {
-          return;
-        }
-        return projection([+d["lon"], +d["lat"]])[1];
-      })
-      .attr("r", 0.7)
-      .attr("fill", "#259299")
-      .attr("stroke", "pink")
-      .attr("opacity", dot_opacity)
-      .attr("stroke-width", 0.0);
+      deckgl.setProps({ layers:  new_layer  });
 
-    g.selectAll(".dots")
-      .data(open_lands)
-      .enter()
-      .append("circle")
-      .attr("class", "open-lands-dots")
-      .attr("cx", function (d) {
-        if (projection([+d["lon"], +d["lat"]]) == null) {
-          return;
-        }
-        return projection([+d["lon"], +d["lat"]])[0];
-      })
-      .attr("cy", function (d) {
-        if (projection([+d["lon"], +d["lat"]]) == null) {
-          return;
-        }
-        return projection([+d["lon"], +d["lat"]])[1];
-      })
-      .attr("r", 0.7)
-      .attr("fill", "#BA578C")
-      .attr("stroke", "pink")
-      .attr("opacity", dot_opacity)
-      .attr("stroke-width", 0.0);
+      d3.select("#white")
+        .on("change", function(d) {
+          if (d3.select("#white").property("checked")) {
+            race_filters.push("pop_white_combo");
+            const new_layer = new deck.ScatterplotLayer({
+              data: files[0].filter(d => race_filters.includes(d.variable)),
+              getPosition: (d) => [+d.lon, +d.lat],
+              getColor: (d) => race_color[d.variable],
+              getRadius: 300,
+              opacity: 0.7
+            })
 
-    g.selectAll(".dots")
-      .data(small_towns)
-      .enter()
-      .append("circle")
-      .attr("class", "small-towns-dots")
-      .attr("cx", function (d) {
-        if (projection([+d["lon"], +d["lat"]]) == null) {
-          return;
-        }
-        return projection([+d["lon"], +d["lat"]])[0];
-      })
-      .attr("cy", function (d) {
-        if (projection([+d["lon"], +d["lat"]]) == null) {
-          return;
-        }
-        return projection([+d["lon"], +d["lat"]])[1];
-      })
-      .attr("r", 0.7)
-      .attr("fill", "#3F8EE6")
-      .attr("stroke", "pink")
-      .attr("opacity", dot_opacity)
-      .attr("stroke-width", 0.0);
+            deckgl.setProps({ layers:  new_layer  });
+          }
+          else {
+            let var_index = race_filters.indexOf("pop_white_combo");
+            if (var_index > -1) {race_filters.splice(var_index, 1)};
+            const new_layer = new deck.ScatterplotLayer({
+              data: files[0].filter(d => race_filters.includes(d.variable)),
+              getPosition: (d) => [+d.lon, +d.lat],
+              getColor: (d) => race_color[d.variable],
+              getRadius: 300,
+              opacity: 0.7
+            })
 
-    d3.select("#metro-fringe").on("change", update_metro_fringe_checkbox);
-    d3.select("#open-lands").on("change", update_open_lands_checkbox);
-    d3.select("#small-towns").on("change", update_small_towns_checkbox);
-    d3.select("#metro-counties").on("change", update_metro_counties_checkbox);
-    d3.select("#native-lands").on("change", update_native_lands_checkbox);
+            deckgl.setProps({ layers:  new_layer  });
+          }
+        });
+
 
   }).catch(function(err) {
       // handle error here

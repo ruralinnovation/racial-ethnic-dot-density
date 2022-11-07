@@ -5,14 +5,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Rural definition decomposition</title>
-  <meta name="description" content="Interactive for understanding rural definitions">
+  <title>Rural racial/ethnic composition</title>
+  <meta name="description" content="Interactive for understanding rural racial/ethnic composition">
   <meta name="author" content="Center on Rural Innovation">
 
-  <meta property="og:title" content="Rural definition decomposition">
+  <meta property="og:title" content="Rural racial/ethnic composition">
   <meta property="og:type" content="website">
   <meta property="og:url" content="">
-  <meta property="og:description" content="Interactive for understanding rural definitions.">
+  <meta property="og:description" content="Interactive for understanding rural racial/ethnic composition.">
   <meta property="og:image" content="image.png">
 
   <link rel="icon" href="/favicon.ico">
@@ -20,46 +20,49 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
   <link rel="stylesheet" href="css/styles.css?v=1.0">
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.10.0/mapbox-gl.js'></script>
+  <script src="https://unpkg.com/deck.gl@latest/dist.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 </head>
-
 <body>
   <div id="content">
-    <h1>The populations counted as rural under both definitions are concentrated in the eastern half of the U.S.</h1>
-    <h2>One dot equals 1,000 people</h2>
+    <h1>Racial and ethnic composition of rural America.</h1>
+    <h2>One dot equals 100 people</h2>
     <div class = "checkbox-container">
-      <label class="container" id="metro-fringe-label">
-        <input id="metro-fringe" type="checkbox" checked="checked">
-        <span class="checkmark"></span>Metro fringe
+      <label class="container" id="asian-label">
+        <input class="race-input" id="asian" type="checkbox" checked="checked">
+        <span class="checkmark"></span>Asian
       </label>
-      <label class="container" id="open-lands-label">
-        <input id="open-lands" type="checkbox" checked="checked">
-        <span class="checkmark"></span>Open lands
+      <label class="container" id="aian-label">
+        <input class="race-input" id="aian" type="checkbox" checked="checked">
+        <span class="checkmark"></span>American Indian and Alaska Native
       </label>
-      <label class="container" id="small-towns-label">
-        <input id = "small-towns" type="checkbox" checked="checked">
-        <span class="checkmark"></span>Small towns
+      <label class="container" id="black-label">
+        <input class="race-input" id = "black" type="checkbox" checked="checked">
+        <span class="checkmark"></span>Black
       </label>
-      <label class="container" id="metro-counties-label">
-        <input id = "metro-counties" type="checkbox" checked="checked">
-        <span class="checkmark"></span>Metro counties
+      <label class="container" id="hispanic-latino-label">
+        <input class="race-input" id = "hispanic-latino" type="checkbox" checked="checked">
+        <span class="checkmark"></span>Hispanic or Latino
       </label>
-      <label class="container" id="native-lands-label">
-        <input id = "native-lands" type="checkbox" checked="checked">
-        <span class="checkmark"></span>Native lands
+      <label class="container" id="nhpi-label">
+        <input class="race-input" id = "nhpi" type="checkbox" checked="checked">
+        <span class="checkmark"></span>Native Hawaiian and Pacific Islander
+      </label>
+      <label class="container" id="white-label">
+        <input class="race-input" id = "white" type="checkbox" checked="checked">
+        <span class="checkmark"></span>White
       </label>
     </div>
     <div id = "container"></div>
-    <p class="footnote">Source: ACS 2019 5-year estimates. Density estimates are derived from 2010 census block definitions and population estimates. Metro/nonmetro estimates are calculated using 2019 Core-based Statistical Area (CBSA) classifications. Native lands are 2019 American Indian Area Geographies published by the U.S. Census Bureau.</p>
+    <p class="footnote">Source: 2020 decennial</p>
     <p class="tagline">CENTER ON RURAL INNOVATION</p>
   </div>
-  <script src="https://unpkg.com/topojson@3"></script>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="js/index.js"></script>
-</body>
+  </body>
 </html>

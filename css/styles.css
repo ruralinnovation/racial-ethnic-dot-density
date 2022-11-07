@@ -1,6 +1,6 @@
 body {
     background-color: #FFFFF9;
-    font-family: Montserrat;
+    font-family: Lato;
     margin: 0px;
 }
 
@@ -31,12 +31,12 @@ body {
 }
 
 #content h1 {
-    font-family: Montserrat;
+    font-family: Lato;
     margin: 0px 0px 2.5px 0px;
 }
 
 #content h2 {
-    font-family: Montserrat;
+    font-family: Lato;
     margin: 5px 0px 2.5px 0px;
 }
 
@@ -71,24 +71,29 @@ input[type=checkbox] {
     white-space: nowrap;
 }
 
-#metro-fringe {
-    accent-color: #259299;
+
+#white {
+    accent-color: #E74F2A;
 }
 
-#open-lands {
-    accent-color: #BA578C;
+#black {
+    accent-color: #00835D;
 }
 
-#small-towns {
-    accent-color: #3F8EE6;
+#aian {
+    accent-color: #234FBF;
 }
 
-#metro-counties {
-    accent-color: #d0d2ce;
+#hispanic-latino {
+    accent-color: #BB3534;
 }
 
-#native-lands {
-    accent-color: #FEECBB;
+#asian {
+    accent-color: #3BA0BF;
+}
+
+#nhpi {
+    accent-color: #7658A2;
 }
 
 .footnote {
