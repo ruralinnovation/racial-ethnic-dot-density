@@ -3,8 +3,6 @@ let map_width = 950;
 let map_height = 500
 let margin = ({ top: 0, right: 0, bottom: 0, left: 0 });
 
-let dot_opacity = .7;
-
 let race_filters = [
   "pop_asian_combo",
   "pop_american_indian_combo",
@@ -20,13 +18,16 @@ function hex_to_rgb_array(c) {
 }
 
 let race_color = {
-  pop_white_combo: hex_to_rgb_array("#E74F2A"),
-  pop_black_combo: hex_to_rgb_array("#00835D"),
-  pop_american_indian_combo: hex_to_rgb_array("#234FBF"),
+  pop_white_combo: hex_to_rgb_array("#984ea3"),
+  pop_black_combo: hex_to_rgb_array("#377eb8"),
+  pop_american_indian_combo: hex_to_rgb_array("#4daf4a"),
   pop_hispanic_combo: hex_to_rgb_array("#BB3534"),
-  pop_asian_combo: hex_to_rgb_array("#3BA0BF"),
-  pop_native_hawaiian_pacific_islander_combo: hex_to_rgb_array("#7658A2")
+  pop_asian_combo: hex_to_rgb_array("#ff7f00"),
+  pop_native_hawaiian_pacific_islander_combo: hex_to_rgb_array("#ffff33")
 };
+
+const dot_radius = 500;
+const dot_opacity = 0.5;
 
 function update_checkox(deckgl, dta, element_id, race_var) {
 
@@ -36,8 +37,8 @@ function update_checkox(deckgl, dta, element_id, race_var) {
       data: dta.filter(d => race_filters.includes(d.variable)),
       getPosition: (d) => [+d.lon, +d.lat],
       getColor: (d) => race_color[d.variable],
-      getRadius: 300,
-      opacity: 0.7
+      getRadius: dot_radius,
+      opacity: dot_opacity
     })
 
     deckgl.setProps({ layers:  new_layer  });
@@ -49,8 +50,8 @@ function update_checkox(deckgl, dta, element_id, race_var) {
       data: dta.filter(d => race_filters.includes(d.variable)),
       getPosition: (d) => [+d.lon, +d.lat],
       getColor: (d) => race_color[d.variable],
-      getRadius: 300,
-      opacity: 0.7
+      getRadius: dot_radius,
+      opacity: dot_opacity
     })
 
     deckgl.setProps({ layers:  new_layer  });
@@ -76,15 +77,17 @@ function render() {
     });
 
     Promise.all([
-      d3.csv("data/dots_100p_all_rural_2020.csv")
+      d3.csv("data/dots_100p_all_rural_shuffled_2020.csv")
     ]).then(function(files) {
+
+      console.log(new Set(files[0].map(d => d.variable)));
 
       const new_layer = new deck.ScatterplotLayer({
         data: files[0].filter(d => race_filters.includes(d.variable)),
         getPosition: (d) => [+d.lon, +d.lat],
         getColor: (d) => race_color[d.variable],
-        getRadius: 300,
-        opacity: 0.7
+        getRadius: dot_radius,
+        opacity: dot_opacity
       })
 
       deckgl.setProps({ layers:  new_layer  });

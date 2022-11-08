@@ -69,19 +69,20 @@ input[type=checkbox] {
     font-size: 12pt;
     margin:  0px 10px 0px 0px;
     white-space: nowrap;
+    line-height: 1.5;
 }
 
 
 #white {
-    accent-color: #E74F2A;
+    accent-color: #984ea3;
 }
 
 #black {
-    accent-color: #00835D;
+    accent-color: #377eb8;
 }
 
 #aian {
-    accent-color: #234FBF;
+    accent-color: #4daf4a;
 }
 
 #hispanic-latino {
@@ -89,11 +90,11 @@ input[type=checkbox] {
 }
 
 #asian {
-    accent-color: #3BA0BF;
+    accent-color: #ff7f00;
 }
 
 #nhpi {
-    accent-color: #7658A2;
+    accent-color: #ffff33;
 }
 
 .footnote {
