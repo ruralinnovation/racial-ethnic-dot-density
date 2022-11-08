@@ -61,7 +61,7 @@ function update_checkox(deckgl, dta, element_id, race_var) {
 function render() {
 
     Promise.all([
-      d3.csv("https://rwjf-public.s3.amazonaws.com/dots_100p_all_rural_shuffled_2020.csv")
+      d3.csv("data/dots_100p_all_rural_2020.csv")
     ]).then(function(files) {
 
       const deckgl = new deck.DeckGL({
