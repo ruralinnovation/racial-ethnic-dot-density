@@ -60,26 +60,24 @@ function update_checkox(deckgl, dta, element_id, race_var) {
 
 function render() {
 
+    const deckgl = new deck.DeckGL({
+      container: 'container',
+      map: mapboxgl,
+      mapStyle: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
+      initialViewState: {
+        longitude: -96,
+        latitude: 38,
+        zoom: 3.7,
+        pitch: 0,
+        bearing: 0
+      },
+      controller: true,
+      layers: []
+    });
+
     Promise.all([
       d3.csv("data/dots_100p_all_rural_2020.csv")
     ]).then(function(files) {
-
-      const deckgl = new deck.DeckGL({
-        container: 'container',
-        map: mapboxgl,
-        mapStyle: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
-        initialViewState: {
-          longitude: -96,
-          latitude: 38,
-          zoom: 3.7,
-          pitch: 0,
-          bearing: 0
-        },
-        controller: true,
-        layers: []
-      });
-
-      console.log(deckgl);
 
       const new_layer = new deck.ScatterplotLayer({
         data: files[0].filter(d => race_filters.includes(d.variable)),
