@@ -77,7 +77,7 @@ function render() {
     });
 
     Promise.all([
-      d3.csv("data/dots_100p_all_rural_shuffled_2020.csv")
+      d3.csv("data/dots_100p_all_rural_shuffled_2020_block.csv")
     ]).then(function(files) {
 
       console.log(new Set(files[0].map(d => d.variable)));
