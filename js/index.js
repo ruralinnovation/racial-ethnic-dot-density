@@ -18,12 +18,12 @@ function hex_to_rgb_array(c) {
 }
 
 let race_color = {
-  pop_white_combo: hex_to_rgb_array("#984ea3"),
+  pop_white_combo: hex_to_rgb_array("#FFCE00"),
   pop_black_combo: hex_to_rgb_array("#377eb8"),
   pop_american_indian_combo: hex_to_rgb_array("#4daf4a"),
   pop_hispanic_combo: hex_to_rgb_array("#BB3534"),
   pop_asian_combo: hex_to_rgb_array("#ff7f00"),
-  pop_native_hawaiian_pacific_islander_combo: hex_to_rgb_array("#ffff33")
+  pop_native_hawaiian_pacific_islander_combo: hex_to_rgb_array("#984ea3")
 };
 
 const dot_radius = 500;
