@@ -68,7 +68,7 @@ function render() {
       initialViewState: {
         longitude: -96,
         latitude: 38,
-        zoom: 3.7,
+        zoom: 3.6,
         pitch: 0,
         bearing: 0
       },
